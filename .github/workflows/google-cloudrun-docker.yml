@@ -26,7 +26,7 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           image_name: $IMAGE_NAME
           image_tag: ${{ steps.get_tag_name.outputs.GIT_TAG_NAME}}
-          dockerfile: ./build/Dockerfile
+          dockerfile: ./build/$IMAGE_NAME
 
       # gcloud configure docker
       - name: Configure Docker
