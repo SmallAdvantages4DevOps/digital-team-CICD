@@ -34,11 +34,6 @@ jobs:
         run: gcloud auth configure-docker --quiet
 
       # build image
-<<<<<<< HEAD
-      - name: Build Docker image
-        run: docker build -t $IMAGE_NAME ./
-=======
->>>>>>> b7e1165 (retweak workflow)
 
       # push image to registry
       - name: Push Docker image
