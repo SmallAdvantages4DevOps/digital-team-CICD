@@ -1,34 +1,44 @@
-name: GCP
-
+name: Deploy | Build | Push - to GCR from GitHub Actions
 on:
   push:
     branches: [main]
 
 jobs:
   deploy:
-    name: Setup Gcloud Account
+    name: Setup GCloud Account
     runs-on: ubuntu-latest
     environment: env-secrets
     env:
       IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/site:latest
     steps:
       # Git checkout
-      - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
       # Login to GCP
       - uses: google-github-actions/setup-gcloud@v0.2.0
+
+      - name: Get the version
+        id: get_tag_name
+        run: echo ::set-output name=GIT_TAG_NAME::${GITHUB_REF/refs\/tags\//}
+
         with:
-          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }} #gcloud_service_key: ${{ secrets.GCLOUD_SERVICE_KEY }}
+          registry: gcr.io
           project_id: ${{ secrets.GCP_PROJECT_ID }}
+          image_name: $IMAGE_NAME
+          image_tag: ${{ steps.get_tag_name.outputs.GIT_TAG_NAME}}
+          dockerfile: ./build/Dockerfile
 
       # gcloud configure docker
       - name: Configure Docker
         run: gcloud auth configure-docker --quiet
 
       # build image
+<<<<<<< HEAD
       - name: Build Docker image
         run: docker build -t $IMAGE_NAME ./
+=======
+>>>>>>> b7e1165 (retweak workflow)
 
       # push image to registry
       - name: Push Docker image
